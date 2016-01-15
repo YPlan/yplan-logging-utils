@@ -37,6 +37,9 @@ setup(
     include_package_data=True,
     license="ISCL",
     zip_safe=False,
+    install_requires=[
+        'six>=1.5.0',
+    ],
     keywords='Logging, YPlan',
     classifiers=[
         'Development Status :: 5 - Production/Stable',

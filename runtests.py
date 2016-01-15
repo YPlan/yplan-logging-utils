@@ -53,6 +53,7 @@ def run_isort():
     print('Running isort check')
     return subprocess.call([
         'isort', '--recursive', '--check-only', '--diff',
+        '-a', 'from __future__ import absolute_import, division, print_function, unicode_literals',
         'yplan_logging_utils', 'tests'
     ])
 
