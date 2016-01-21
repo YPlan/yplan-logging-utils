@@ -6,7 +6,12 @@ import socket
 from logging import INFO, LogRecord
 
 import pytest
-from yplan_logging_utils.formatters import JSONFormatter
+from yplan_logging_utils.formatters import JSONFormatter, PlainJSONFormatter
+
+
+@pytest.fixture
+def plain_json_formatter():
+    return PlainJSONFormatter()
 
 
 @pytest.fixture
@@ -23,7 +28,27 @@ def assert_contains_keys(dicty, keys):
     assert (set(keys) - set(dicty.keys())) == set()
 
 
-def test_basic(json_formatter):
+def test_plain_json_formatter_basic(plain_json_formatter):
+    record = LogRecord(
+        name='test',
+        level=INFO,
+        pathname='/test.py',
+        lineno=1337,
+        msg="This is a test",
+        args=[],
+        exc_info=None
+    )
+    actual = plain_json_formatter.format(record)
+    assert_contains(actual, {
+        'message': 'This is a test',
+        'host': socket.gethostname(),
+        'levelname': 'INFO',
+        'logger': 'test',
+    })
+    assert_contains_keys(actual, {'time'})
+
+
+def test_json_formatter_basic(json_formatter):
     record = LogRecord(
         name='test',
         level=INFO,
@@ -44,7 +69,7 @@ def test_basic(json_formatter):
     assert_contains_keys(actual, {'time'})
 
 
-def test_easy_extra_types(json_formatter):
+def test_json_formatter_easy_extra_types(json_formatter):
     record = LogRecord(
         name='test', level=INFO, pathname='/test.py', lineno=1337, msg="This is a test", args=[], exc_info=None
     )
@@ -59,7 +84,7 @@ def test_easy_extra_types(json_formatter):
     })
 
 
-def test_non_easy_extra_types(json_formatter):
+def test_json_formatter_non_easy_extra_types(json_formatter):
     record = LogRecord(
         name='test', level=INFO, pathname='/test.py', lineno=1337, msg="This is a test", args=[], exc_info=None
     )

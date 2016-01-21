@@ -11,7 +11,10 @@ import six
 easy_types = six.string_types + six.integer_types + (bool, dict, float, list)
 
 
-class JSONFormatter(logging.Formatter):
+class PlainJSONFormatter(logging.Formatter):
+    """
+    Formats records as dicts
+    """
     def __init__(self):
         self.host = socket.gethostname()
 
@@ -29,7 +32,7 @@ class JSONFormatter(logging.Formatter):
         if record.exc_info:
             message.update(self.get_debug_fields(record))
 
-        return json.dumps(message)
+        return message
 
     def get_extra_fields(self, record):
         # The list contains all the attributes listed in
@@ -61,3 +64,10 @@ class JSONFormatter(logging.Formatter):
             'funcName': record.funcName,
             'processName': record.processName,
         }
+
+
+class JSONFormatter(PlainJSONFormatter):
+
+    def format(self, record):
+        message = super(JSONFormatter, self).format(record)
+        return json.dumps(message)
