@@ -15,4 +15,7 @@ Utilities we use for logging throughout our projects.
 Features
 --------
 
-* `JSONFormatter`
+* ``PlainJSONFormatter`` - a formatter that turns logging records into ``dict``s in our (somewhat in-house) format.
+  Note it returns a ``dict`` which is somewhat non-standard but compatible with the ``fluent-logger`` package.
+* ``JSONFormatter`` - a subclass of the above that does ``json.dumps`` so you get the stringified version of the
+  dictionary.
